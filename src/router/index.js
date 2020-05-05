@@ -16,11 +16,11 @@ VueRouter.prototype.push = function (location, onComplete, onAbort){
         //让原来的push方法进行处理
         originPush.call(this,location,onComplete,onAbort)
     }else{
-        return originPush.call(this, location).catch(() => {
-            console.log('catch error');
+        return originPush.call(this, location).catch((error) => {
+            console.log('catch 到重复请求的error');
+            return new Promise(() => {});
         })
-    }
-    
+    } 
 }
 VueRouter.prototype.replace = function(location,onComplete,onAbort){
     if(onComplete || onAbort){
@@ -28,6 +28,7 @@ VueRouter.prototype.replace = function(location,onComplete,onAbort){
     }else{
         return originReplace.call(this,location).catch(() => {
             console.log('catch error2');
+            return new Promise(() => {});
         })
     }
 }
@@ -35,6 +36,6 @@ VueRouter.prototype.replace = function(location,onComplete,onAbort){
 
 
 export default new VueRouter({
-    mode:'history',//不带#模式
+    // mode:'history',//不带#模式
     routes,//配置所有路由
 });
