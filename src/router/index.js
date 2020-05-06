@@ -36,6 +36,6 @@ VueRouter.prototype.replace = function(location,onComplete,onAbort){
 
 
 export default new VueRouter({
-    // mode:'history',//不带#模式
+    mode:'history',//不带#模式
     routes,//配置所有路由
 });

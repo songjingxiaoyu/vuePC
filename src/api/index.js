@@ -1,6 +1,7 @@
 //包含所有接口请求模块
 
 import ajax from './ajax';
+import mockAjax from './mockAjax';
 
 //GET请求
 export function reqBaseCategoryList(){
@@ -21,3 +22,6 @@ export function reqLogin(mobile, password){
     });
     // return ajax.post('/user/passport/login',{mobile,password})
 };
+
+export const reqBanners = () => mockAjax('/banners');
+export const reqFloors = () => mockAjax('/floors');

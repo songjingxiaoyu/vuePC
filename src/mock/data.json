@@ -1,0 +1,28 @@
+[
+    {
+        "id":1,
+        "username":"小红",
+        "age":10,
+        "address":{
+    
+        },
+        "likes":[]
+    },
+    {
+        "id":2,
+        "username":"小明",
+        "age":14,
+        "address":{
+    
+        },
+        "likes":[]
+    },{
+        "id":3,
+        "username":"小刚",
+        "age":14,
+        "address":{
+    
+        },
+        "likes":[]
+    }
+]

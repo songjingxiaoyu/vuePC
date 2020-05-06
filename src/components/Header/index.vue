@@ -32,8 +32,8 @@
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" />
-                        <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
+                        <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword"/>
+                        <button class="sui-btn btn-xlarge btn-danger" type="button" @click.prevent="search">搜索</button>
                     </form>
                 </div>
             </div>
@@ -54,7 +54,7 @@ export default {
         //字符串模式
         // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
         //对象模式（在开发中用得比较多）
-        const keyword = this.keyword;
+        // const keyword = this.keyword;
         // if(keyword === ''){
         //     this.$router.push('/search')
         // }else{
@@ -100,15 +100,19 @@ export default {
     //        query:{keyword2:keyword.toUpperCase()}
     //    }).catch(() => {});
 
-       //push是重写后的方法
-       this.$router.replace({
+       const keyword = this.keyword;
+       const location = {
            name:'search',
-           params:{keyword:keyword==='' ? undefined : keyword},
-           query:{keyword2:keyword.toUpperCase()}
-       })
+       }
+       if(keyword){
+           location.params = {keyword}
+       }
+       const {query} = this.$route;
+       location.query = query;
+       //跳转到search
+       this.$router.push(location);
       }
     },
-    
 }
 </script>
 
