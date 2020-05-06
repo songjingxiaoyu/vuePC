@@ -13,7 +13,7 @@ VueRouter.prototype.push = function (location, onComplete, onAbort){
     //this是路由器对象 $router
     //如果调用push,传递了成功或者失败的回调函数
     if(onComplete || onAbort){
-        //让原来的push方法进行处理
+        //让原来的push方法处理
         originPush.call(this,location,onComplete,onAbort)
     }else{
         return originPush.call(this, location).catch((error) => {
