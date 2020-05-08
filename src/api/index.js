@@ -22,6 +22,6 @@ export function reqLogin(mobile, password){
     });
     // return ajax.post('/user/passport/login',{mobile,password})
 };
-
+//mock接口对应的接口请求函数
 export const reqBanners = () => mockAjax('/banners');
 export const reqFloors = () => mockAjax('/floors');

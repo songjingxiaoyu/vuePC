@@ -24,8 +24,10 @@ export default {
     // console.log(this.$store.state);
     //测试通过异步action获取异步数据到vuex的state中
     // this.$store.dispatch('getBaseCategoryList');
+    //测试针对mock接口的vuex代码
+    // this.$store.dispatch('getFloors');
+    // this.$store.dispatch('getBanners');
     
-
     this.$store.dispatch('getBaseCategoryList');
   },
   components:{
