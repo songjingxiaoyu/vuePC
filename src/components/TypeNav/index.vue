@@ -133,7 +133,11 @@ export default {
                     location.params = {keyword}
                 }
                 //跳转到search
-                this.$router.push(location);
+                if(this.$route.path.indexOf('/search')===0){
+                    this.$router.replace(location);
+                }else{
+                    this.$router.push(location);
+                }
                 //隐藏一级列表
                 this.hideCategorys();
             }

@@ -25,3 +25,12 @@ export function reqLogin(mobile, password){
 //mock接口对应的接口请求函数
 export const reqBanners = () => mockAjax('/banners');
 export const reqFloors = () => mockAjax('/floors');
+
+//根据搜索条件参数对象，获取商品列表数据
+export const reqProductList = (searchParams) => ajax({
+    url:'/list',
+    method:'POST',
+    data: searchParams
+})
+
+ 

@@ -26,14 +26,20 @@
             <!--头部第二行 搜索区域-->
             <div class="bottom">
                 <h1 class="logoArea">
-                  <router-link class="logo" title="尚品汇"  target="_blank" to="/">
+                  <router-link class="logo" to="/">
                       <img src="./images/Logo.png" alt="">
                   </router-link>
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword"/>
-                        <button class="sui-btn btn-xlarge btn-danger" type="button" @click.prevent="search">搜索</button>
+                        <input placeholder='关键字' 
+                        type="text"
+                         id="autocomplete" 
+                        class="input-error input-xxlarge" 
+                        v-model="keyword"/>
+                        <button class="sui-btn btn-xlarge btn-danger"
+                         @click.prevent="search">搜索</button>
+                        <!-- <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button> -->
                     </form>
                 </div>
             </div>
@@ -46,8 +52,13 @@ export default {
     name:'Header',
     data(){
       return{
-        keyword:'hahahaha'
+        keyword:''
       }
+    },
+    mounted() {
+        this.$bus.$on('removeKeyword',()=>{
+            this.keyword = ''
+        })
     },
     methods:{
       search(){
@@ -110,7 +121,14 @@ export default {
        const {query} = this.$route;
        location.query = query;
        //跳转到search
-       this.$router.push(location);
+       //如果当前页面是首页使用push，否则用replace
+    //    if(this.$route.path.indexOf('/search')===0){
+       if(this.$route.name==="search"){
+           this.$router.replace(location);
+       }else{
+           this.$router.push(location);
+       }
+       
       }
     },
 }

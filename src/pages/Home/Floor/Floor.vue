@@ -23,7 +23,7 @@
                                 <img :src="floor.imgUrl" />
                             </div>
                             <div class="floorBanner">
-                                <Carousel :carouselList="floor.carouselList"/>
+                                <Carousel :carouselList="floor.carouselList" :autoplay='false'/>
                             </div>
                             <div class="split">
                                 <span class="floor-x-line"></span>

@@ -20,7 +20,11 @@ import Swiper from "swiper";
 export default {
   name: "Carousel",
   props: {
-    carouselList: Array
+    carouselList: Array,
+    autoplay:{
+      type:Boolean,
+      default:true
+    }
   },
   watch: {
     //监视carouselList的变化的回调函数，在carouselList数据变化才调用
@@ -50,7 +54,7 @@ export default {
       new Swiper(this.$refs.swiper, {
         // direction: 'horizontal', // 水平切换选项，
         loop: true, // 循环模式选项
-
+        autoplay:this.autoplay,//自动轮播
         // 如果需要分页器
         pagination: {
           el: ".swiper-pagination"

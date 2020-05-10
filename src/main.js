@@ -13,7 +13,13 @@ Vue.config.productionTip = false//去掉生产环境的提示
 Vue.component('TypeNav',TypeNav);
 Vue.component('Carousel',Carousel);
 
+// Vue.prototype.$bus = new Vue();
+
 new Vue({
+  beforeCreate() {
+    //当前vm对象
+    Vue.prototype.$bus = this;
+  },
   render: h => h(App),
   router,//配置路由器
   store,//配置Vuex的store
