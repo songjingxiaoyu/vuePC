@@ -38,4 +38,7 @@ VueRouter.prototype.replace = function(location,onComplete,onAbort){
 export default new VueRouter({
     mode:'history',//不带#模式
     routes,//配置所有路由
+    scrollBehavior(to,from,savedPosition){
+        return {x:0,y:0}
+    }
 });

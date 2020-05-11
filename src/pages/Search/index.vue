@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TypeNav />
+    <TypeNav/>
     <!--list-content-->
     <div class="main">
       <div class="py-container">
@@ -8,7 +8,7 @@
         <div class="bread">
           <ul class="fl sui-breadcrumb">
             <li>
-              <a href="#">全部结果</a>
+              <a href="javascript:">全部结果</a>
             </li>
           </ul>
           <ul class="fl sui-tag">
@@ -31,29 +31,33 @@
           </ul>
         </div>
         <!--selector-->
-        <SearchSelector :setTrademark="setTrademark" :addProp='addProp'/>
+        <SearchSelector :setTrademark='setTrademark' :addProp='addProp'/>
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:isActive('1')}" @click="setOrder('1')">
+                  <a href="javascript:">综合
+                    <i class="iconfont" :class="orderIcon"
+                  v-if="isActive('1')"
+                  ></i>
+                  </a>
+                  
                 </li>
                 <li>
-                  <a href="#">销量</a>
+                  <a href="javascript:">销量</a>
                 </li>
                 <li>
-                  <a href="#">新品</a>
+                  <a href="javascript:">新品</a>
                 </li>
                 <li>
-                  <a href="#">评价</a>
+                  <a href="javascript:">评价</a>
                 </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:isActive('2')}" @click="setOrder('2')">
+                  <a href="javascript:">价格
+                    <i class="iconfont" :class="orderIcon" v-if="isActive('2')"></i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -63,9 +67,9 @@
               <li class="yui3-u-1-5" v-for="goods in productList.goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="javascript:">
+                    <router-link :to="`/detail/${goods.id}`">
                       <img :src="goods.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -74,7 +78,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a href="javascript:">{{goods.title}}</a>
+                    <router-link :to="`/detail/${goods.id}`">{{goods.title}}</router-link>
                   </div>
                   <div class="commit">
                     <i class="command">
@@ -94,39 +98,13 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted">
-                  <span>...</span>
-                </li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div>
-                <span>共10页&nbsp;</span>
-              </div>
-            </div>
-          </div>
+          <Pagination
+          :currentPage="options.pageNo"
+          :pageSize="options.pageSize"
+          :total="productList.total"
+          :showPageNo="3"
+          @currentChange="handlCurrentChange"
+          />
         </div>
       </div>
     </div>
@@ -146,18 +124,22 @@ export default {
         category3Id: "", // 三级分类ID
         categoryName: "", // 分类名称
         keyword: "", // 关键字
-        trademark: "", // 品牌  "ID:品牌名称"
+        // trademark: "", // 品牌  "ID:品牌名称"
         props: [], // 商品属性的数组: ["属性ID:属性值:属性名"] 示例: ["2:6.0～6.24英寸:屏幕尺寸"]
-        order: "1:desc", // 排序方式  1: 综合,2: 价格 asc: 升序,desc: 降序  示例: "1:desc"
+        order: "1:asc", // 排序方式  1: 综合,2: 价格 asc: 升序,desc: 降序  示例: "1:desc"
         pageNo: 1, // 当前页码
-        pageSize: 10 // 每页数量
+        pageSize: 5, // 每页数量
       }
     };
   },
   computed: {
     ...mapState({
       productList: state => state.search.productList
-    })
+    }),
+    //计算排序方式的icon类名
+    orderIcon(){
+      return this.options.order.split(':')[1]==='desc' ? 'icondown' : 'iconup'
+    }
   },
   watch: {
     //当只是路由跳转时只有路由参数发生变化时调用
@@ -182,31 +164,67 @@ export default {
     //   "trademark": "4:小米"
     // })
     //更新options
-
-    this.$store.dispatch("getProductList", this.options);
+    // this.$store.dispatch("getProductList", this.options);
+    this.getProductList();
   },
+
   methods: {
+    //获取指定页面的分页商品数据，默认指定第一页
+    getProductList(pageNo=1) {
+      this.options.pageNo = pageNo
+      this.$store.dispatch('getProductList', this.options);
+    },
+    //当选择改变当前页码时的事件监听回调
+    handlCurrentChange(currentPage){
+      this.options.pageNo = currentPage
+      this.$store.dispatch('getProductList', this.options);
+    },
+    //判断指定flag是否是当前项
+    isActive(orderFlag){
+      return this.options.order.indexOf(orderFlag)===0
+    },
+    //设置新的排序
+    setOrder(flag){'0' / '1'
+      let [orderFlag,orderType] = this.options.order.split(':')
+      if(flag===orderFlag){
+        orderType = orderType === 'desc' ? 'asc' : 'desc'
+      }else{
+        orderFlag = flag
+        orderType = 'desc'
+      }
+      this.options.order = orderFlag + ':' + orderType
+      this.getProductList();
+    },
+     //移除属性条件
+    removeProp(index){
+        this.options.props.splice(index,1)
+    this.getProductList();
+      },
     //添加一个属性条件
     addProp(attrId,value,attrName){
         const prop = `${attrId}:${value}:${attrName}`
         if(this.options.props.indexOf(prop)!==-1) return
         this.options.props.push(prop)
-        this.$store.dispatch("getProductList", this.options);
-      },
-    //移除属性条件
-    removeProp(index){
-        this.options.props.splice(index,1)
-        this.$store.dispatch("getProductList", this.options);
+        this.getProductList();
       },
     //设置新的品牌数据
     setTrademark(trademark) {
-      this.options.trademark = trademark;
-      this.$store.dispatch("getProductList", this.options);
+      //直接添加，不会自动更新界面
+      // this.options.trademark = trademark;
+      //使用set给响应式数据添加新属性
+      if(!this.options.hasOwnProperty('trademark')){
+        this.$set(this.options,'trademark',trademark)
+      }else{
+        this.options.trademark = trademark
+      }
+        this.getProductList();
     },
     //移除品牌的搜索条件
     removeTrademark() {
-      this.options.trademark = "";
-      this.$store.dispatch("getProductList", this.options);
+      // this.options.trademark = "";
+      this.$delete(this.options,'trademark')
+      // this.$store.dispatch("getProductList", this.options);
+      this.getProductList();
     },
     //移除分类的搜索条件
     removeCategory() {

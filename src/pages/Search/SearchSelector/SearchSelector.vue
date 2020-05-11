@@ -6,7 +6,8 @@
                         <div class="value logos">
                             <ul class="logo-list">
                                 <li v-for="tm in trademarkList" :key="tm.tmId"
-                                 @click="setTrademark(`${tm.tmId}:${tm.tmName}`)">{{tm.tmName}}</li>
+                                 @click="setTrademark(`${tm.tmId}:${tm.tmName}`)"
+                                 >{{tm.tmName}}</li>
                             </ul>
                         </div>
                         <div class="ext">
@@ -31,7 +32,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+// import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 export default {
     name:'SearchSelector',
     props:{
@@ -39,9 +41,14 @@ export default {
         addProp:Function,
     },
     computed: {
-        ...mapState({
-            trademarkList: state => state.search.productList.trademarkList,
-            attrList: state => state.search.productList.attrsList,            
+        // ...mapState({
+        //     trademarkList: state => state.search.productList.trademarkList,
+        //     attrList: state => state.search.productList.attrsList,            
+        // }),
+        // ...mapGetters(['trandemarkList','attrList']),
+        ...mapGetters({
+            trademarkList:'trademarkList',
+            attrList:'attrsList'
         })
     },
 }
