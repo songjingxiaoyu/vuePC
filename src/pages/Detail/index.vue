@@ -6,32 +6,38 @@
     <!-- 主要内容区域 -->
     <section class="con">
       <!-- 导航路径区域 -->
+      <!-- <div class="conPoin" v-if="detailInfo.categoryView">
+        <span>{{detailInfo.categoryView.category1Name}}</span>
+        <span>{{detailInfo.categoryView.category2Name}}</span>
+        <span>{{detailInfo.categoryView.category3Name}}</span>
+      </div> -->
       <div class="conPoin">
-        <span>手机、数码、通讯</span>
-        <span>手机</span>
-        <span>Apple苹果</span>
-        <span>iphone 6S系类</span>
+        <span>{{categoryView.category1Name}}</span>
+        <span>{{categoryView.category2Name}}</span>
+        <span>{{categoryView.category3Name}}</span>
       </div>
       <!-- 主要内容区域 -->
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom v-if="skuImageList.length>0" :bigUrl="skuImageList[currentIndex].imgUrl" 
+          :imgUrl="skuImageList[currentIndex].imgUrl"/>
           <!-- 小图列表 -->
-          <ImageList />
+          <!-- <ImageList  @currentChange="currentIndex=$event"/> -->
+          <ImageList  @currentChange="handleCurrentChange"/>
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">Apple iPhone 6s（A1700）64G玫瑰金色 移动通信电信4G手机</h3>
-            <p class="news">推荐选择下方[移动优惠购],手机套餐齐搞定,不用换号,每月还有花费返</p>
+            <h3 class="InfoName">{{skuInfo.skuName}}</h3>
+            <p class="news">{{skuInfo.skuDesc}}</p>
             <div class="priceArea">
               <div class="priceArea1">
                 <div class="title">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                 <div class="price">
                   <i>¥</i>
-                  <em>5299</em>
+                  <em>{{skuInfo.price}}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -64,39 +70,22 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
+              <dl v-for="(attr) in spuSaleAttrList" :key="attr.id">
+                <dt class="title">{{attr.saleAttrName}}</dt>
+                <dd v-for="(value) in attr.spuSaleAttrValueList"
+                :key="value.id" :class="{active:value.isChecked==='1'}"
+                @click="selectValue(value, attr.spuSaleAttrValueList)"
+                >{{value.saleAttrValueName}}</dd>
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum">
+                <a href="javascript:" class="plus" @click="skuNum += 1">+</a>
+                <a href="javascript:" class="mins" @click="skuNum = skuNum>1 ? skuNum-1 : 1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addToCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -347,11 +336,75 @@
 </template>
 
 <script>
+  import {mapState, mapGetters} from 'vuex'
   import ImageList from './ImageList/ImageList'
   import Zoom from './Zoom/Zoom'
 
   export default {
     name: 'Detail',
+    data() {
+      return {
+        //当前要交给zoom显示的图片下标
+        currentIndex:0,
+        //准备添加到购物车中商品的数量
+        skuNum:1,
+      }
+    },
+    computed: {
+      ...mapState({
+        detailInfo:state=>state.detail.detailInfo
+      }),
+      ...mapGetters(['categoryView','skuInfo','skuImageList','spuSaleAttrList']),
+    },
+    mounted() {
+      this.$store.dispatch('getDetailInfo',this.$route.params.skuId)
+    },
+    methods: {
+      //
+      addToCart(){
+        const skuId = this.$route.params.skuId
+        const skuNum = this.skuNum
+        //方式1
+        // this.$store.dispatch('addToCart',{skuId,skuNum, callback:this.callback})
+        // alert('---')
+        //方式2
+        // const errorMsg = await this.$store.dispatch('addToCart2',{})
+        // if(errorMsg){
+        //   alert(errorMsg)
+        // }else{
+        //   alert('添加成功，准备自动跳转到成功的界面')
+        // }
+        //方式3
+        try {
+          // await this.$store.dispatch('addToCart3', {skuId, skuNum})
+          this.$store.dispatch('addToCart3', {skuId, skuNum})
+          alert('添加成功, 准备自动跳转到成功的界面')
+        } catch (error) {
+          alert(error.message)
+        }
+      },
+      //当异步action结束时自动调用的回调函数
+      callback(errorMsg){
+        if(errorMsg){
+          alert(errorMsg)
+        }else{
+          alert('添加成功，准备自动跳转到成功的界面')
+        }
+      },
+      //当前图片下标发生改变的监听回调函数
+      handleCurrentChange(index){
+        this.currentIndex = index
+      },
+      //选择某个属性值
+      selectValue(value,valueList){
+        if(value.isChecked!=='1'){
+          //将所有的选项都先指定为不选择
+          valueList.forEach(v => v.isChecked = '0')
+          //选中当前的
+          value.isChecked = '1'
+        }
+      }
+    },
     
     components: {
       ImageList,

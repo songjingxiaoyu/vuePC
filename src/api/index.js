@@ -33,4 +33,12 @@ export const reqProductList = (searchParams) => ajax({
     data: searchParams
 })
 
+
+//请求获取指定id的商品信息
+export const reqProduct = (skuId) => ajax(`/item/${skuId}`)
+
+//添加到购物车
+export const reqAddToCart = (skuId, skuNum) => ajax.post(`/cart/addToCart/${skuId}/${skuNum}`)
+
+
  

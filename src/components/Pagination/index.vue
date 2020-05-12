@@ -4,8 +4,9 @@
       <button v-if="startEnd.start>1" @click='setCurrentPage(1)'>1</button>
       <button disabled v-if="startEnd.start>2">···</button>
 
-      <button v-for="num in startEnd.end"
-          v-if="num>=startEnd.start" 
+      <button 
+          v-if="num>=startEnd.start"
+          v-for="num in startEnd.end" :key="num.id" 
           :class="{active:num===myCurrentPage}" 
           @click='setCurrentPage(num)'
           >{{num}}</button>
@@ -82,6 +83,7 @@ export default {
     methods: {
         //设置新的当前页码
         setCurrentPage(currentPage){
+            if(currentPage===this.myCurrentPage) return
             this.myCurrentPage = currentPage
             this.$emit('currentChange', currentPage)
         }

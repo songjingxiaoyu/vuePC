@@ -15,7 +15,7 @@ export default [
         // props: route => ({keyword3:route.params.keyword,keyword4:route.query.keyword2})
     },{
         name:'detail',
-        path:'/detail/:id',
+        path:'/detail/:skuId',
         component:Detail,
     },
     {
