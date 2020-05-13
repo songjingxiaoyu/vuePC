@@ -3,7 +3,7 @@
 import axios from 'axios';
 import Nprogress from 'nprogress';//加载nprogress的nprogress.js
 import 'nprogress/nprogress.css';//加载nprogress的nprogress.css
-
+import  store from  '@/store'
 Nprogress.configure({ showSpinner: false });
 //1 创建一个新的axios（Axios功能上实例）函数:功能与axios类似
 const instance = axios.create({
@@ -16,6 +16,9 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
     //2 显示请求进度条
     Nprogress.start()
+    //5 userTempId带请求头
+    // config.headers.userTempId = store.state.user.userTempId
+    config.headers['userTempId'] = store.state.user.userTempId
     return config;
 });
 

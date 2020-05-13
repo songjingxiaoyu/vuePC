@@ -1,5 +1,5 @@
 //管理商品详情信息的vue子模块
-import { reqProduct, reqAddToCart } from '@/api'
+import { reqProduct } from '@/api'
 
 const state = {
     detailInfo:{},//当前商品详情信息对象
@@ -19,41 +19,7 @@ const actions = {
             commit('RECEIVE_DETAIL_INFO',detailInfo)
         }
     },
-    //添加商品到购物车异步acyion
-    async addToCart({commit}, {skuId,skuNum,callback}){
-        const result = await reqAddToCart(skuId,skuNum)
-        if(result.code===200){
-            //添加到购物车成功
-            console.log('添加购物车成功')
-            callback()
-            // callback({status: 0, message:'添加购物车成功'})     
-        }else{
-            //添加到购物车失败
-            console.log('添加购物车失败')
-            callback('添加购物车失败')
-            // callback({status:1,message:'添加购物车失败'})
-        }
-    },
-    async addToCart2({commit},{skuId,skuNum}){
-        const result = await reqAddToCart(skuId,skuNum)
-        if(result.code===200){
-            //添加到购物车成功
-            return ''
-        }else{
-            //添加到购物车失败
-            return '添加购物车失败'
-        }
-    },
-    async addToCart3({commit},{skuId,skuNum}){
-        const result = await reqAddToCart(skuId,skuNum)
-        if(result.code===200){
-            //添加到购物车成功
-            return ''
-        }else{
-            //添加到购物车失败
-            throw new Error ('添加购物车失败')
-        }
-    }
+    
 
 }
 const getters = {
