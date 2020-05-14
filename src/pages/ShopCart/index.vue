@@ -37,7 +37,7 @@
             <span class="sum">{{item.cartPrice * item.skuNum}}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet" @click="deleteItem(item)">删除</a>
+            <a href="#none" class="sindelet" @click="deleteCartItem(item)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -51,7 +51,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none" @click="deleteCheckedItems">删除选中的商品</a>
+        <a href="#none" @click="deleteCheckedCartItems">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -130,27 +130,27 @@ import {mapState,mapGetters} from 'vuex'
           alert(error.message)
         }
       },
-      //异步删除指定购物项
-      async deleteItem(item){
-        if(window.confirm('您确定要删除吗？')){
+      //删除指定购物项
+      async deleteCartItem(item){
+        if(window.confirm(`确定删除${item.skuName}吗？`)){
           try{
             await this.$store.dispatch('deleteCartItem',item.skuId)
-            this.getCartList()
+            this.$store.dispatch('getCartList')
           }catch(error){
-            alert(error.message || '删除购物项失败')
+            alert(error.message)
           }
         }
       },
       //删除所有选中的购物项
-      async deleteCheckedItems(){
-        // if(this.checkedCartItems.length===0) return
-        if(window.confirm('您确定要删除吗？')){
-          const promises = this.checkedCartItems(item => {
-            return this.$store.dispatch('deleteCartItem',item.skuId)
-          })
-          await Promise.all(promises)
-          this.getCartList()
-        }
+      async deleteCheckedCartItems(){
+       if(window.confirm(`确定删除吗？`)){
+         try{
+           await this.$store.dispatch('deleteCheckedCartItems')
+           this.$store.dispatch('getCartList')
+         }catch(error){
+           alert(error.message)
+         }
+       }
       }
     },
   }

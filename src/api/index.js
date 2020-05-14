@@ -3,7 +3,7 @@
 import ajax from './ajax';
 import mockAjax from './mockAjax';
 
-//GET请求
+//请求获取3级分类列表
 export function reqBaseCategoryList(){
     // return ajax('/product/getBaseCategoryList');
     // return ajax.get('/product/getBaseCategoryList');
@@ -13,15 +13,7 @@ export function reqBaseCategoryList(){
     });
 };
 
-//POST请求
-export function reqLogin(mobile, password){
-    return ajax({
-        method:'POST',
-        url:'/user/passport/login',
-        data:{mobile,password}
-    });
-    // return ajax.post('/user/passport/login',{mobile,password})
-};
+
 //mock接口对应的接口请求函数
 export const reqBanners = () => mockAjax('/banners');
 export const reqFloors = () => mockAjax('/floors');
@@ -37,6 +29,9 @@ export const reqProductList = (searchParams) => ajax({
 //请求获取指定id的商品信息
 export const reqProduct = (skuId) => ajax(`/item/${skuId}`)
 
+
+
+
 //添加到购物车
 export const reqAddToCart = (skuId, skuNumChange) => ajax.post(`/cart/addToCart/${skuId}/${skuNumChange}`)
 
@@ -44,11 +39,30 @@ export const reqAddToCart = (skuId, skuNumChange) => ajax.post(`/cart/addToCart/
 export const reqCartList=()=>ajax('/cart/cartList')
 
 //切换商品选中的状态
-export const reqCheckCartItem = (skuId,isChecked) => ajax(`/cart/checkCart/${skuId}/${isChecked}`)
+export const reqCheckCartItem = (skuId, isChecked) => ajax(`/cart/checkCart/${skuId}/${isChecked}`)
 
  //删除购物车商品
- export const reqDeleteCartItem = (skuId) => ajax(`/cart/deleteCart/${skuId}`)
-
-
+ export const reqDeleteCartItem = (skuId) => ajax.delete(`/cart/deleteCart/${skuId}`)
 
  
+ //请求登录
+export function reqLogin(mobile, password){
+    return ajax({
+        method:'POST',
+        url:'/user/passport/login',
+        data:{mobile,password}
+    });
+    // return ajax.post('/user/passport/login',{mobile,password})
+};
+
+
+//请求注册
+// export const reqRegister = () => ajax.post(`/user/passport/register`,{mobile,password,code})
+export const reqRegister = (userInfo) => ajax.post(`/user/passport/register`,userInfo)
+
+//退出登录
+export const reqLogout = () => ajax(`/user/passport/logout`)
+
+
+
+

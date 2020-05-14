@@ -43,14 +43,23 @@ export default {
             return Promise.all(promises)
         },
         //删除指定一个商品
-        async deleteCartItem({commit},skuId){
+        async deleteCartItem(context,skuId){
             const result = await reqDeleteCartItem(skuId)
             if(result.code!==200){
                 throw new Error('删除商品失败')
             }
         },
         //删除所有选中的商品
-
+        async deleteCheckedCartItems({state,dispatch}){
+            const promises = state.cartList.reduce((pre,item) => {
+                if(item.isChecked===1){
+                    pre.push(dispatch('deleteCartItem',item.skuId))
+                }
+                return pre
+            },[])
+            return Promise.all(promises)
+        },
+       
 
         //
         async addToCart({commit}, {skuId,skuNum,callback}){
