@@ -1,5 +1,6 @@
 <template>
-  <div class="cart-complete-wrap">
+  <!-- <div class="cart-complete-wrap" v-if="skuInfo"> -->
+  <div class="cart-complete-wrap" >
     <div class="cart-complete">
       <h3><i class="sui-icon icon-pc-right"></i>商品已成功加入购物车！</h3>
       <div class="goods">
@@ -23,6 +24,7 @@
 </template>
 
 <script>
+import router from '@/router'
   export default {
     name: 'AddCartSuccess',
     data() {
@@ -32,8 +34,18 @@
     },
     //做一些同步操作后，更新数据
     beforeMount() {
-     this.skuInfo = JSON.parse( window.sessionStorage.getItem('SKU_IN_FO'))
+     this.skuInfo = JSON.parse( window.sessionStorage.getItem('SKU_INFO_KEY'))
     },
+    //只有携带的skuNum以及sessionStorage中有skuInfo数据, 才能查看添加购物车成功的界面
+    // beforeRouteEnter (to, from, next) {
+    //     const skuNum = to.query.skuNum
+    //     const skuInfo = JSON.parse( window.sessionStorage.getItem('SKU_INFO_KEY'))
+    //     if(skuNum && skuInfo){
+    //       next()
+    //     }else{
+    //       next('/')
+    //     }
+    // }
   }
 </script>
 

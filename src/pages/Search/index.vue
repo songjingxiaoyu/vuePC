@@ -103,7 +103,7 @@
           :pageSize="options.pageSize"
           :total="productList.total"
           :showPageNo="3"
-          @currentChange="handlCurrentChange"
+          @currentChange="getProductList"
           />
         </div>
       </div>
@@ -175,10 +175,10 @@ export default {
       this.$store.dispatch('getProductList', this.options);
     },
     //当选择改变当前页码时的事件监听回调
-    handlCurrentChange(currentPage){
-      this.options.pageNo = currentPage
-      this.$store.dispatch('getProductList', this.options);
-    },
+    // handlCurrentChange(currentPage){
+    //   this.options.pageNo = currentPage
+    //   this.$store.dispatch('getProductList', this.options);
+    // },
     //判断指定flag是否是当前项
     isActive(orderFlag){
       return this.options.order.indexOf(orderFlag)===0

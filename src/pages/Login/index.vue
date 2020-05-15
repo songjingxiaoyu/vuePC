@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import store from '@/store'
   export default {
     name: 'Login',
     data() {
@@ -79,12 +80,36 @@
         const {mobile,password} = this
         try{
           await this.$store.dispatch('login',{mobile,password})
-          this.$router.replace('/')
+          const redirect = this.$route.query.redirect
+          if(redirect){
+            this.$router.replace(redirect)
+          }else{
+            this.$router.replace('/')
+          }
         }catch(error){
           alter(error.message)
         }
       },
     },
+    //登录了去登录页面，没有登录去首页
+    //1组件守卫,引入store
+      // beforeRouteEnter (to, from, next) {
+      //     if(!store.state.user.userInfo.token){
+      //         next()
+      //     }else{
+      //         next('/')
+      //     }
+      // },
+      //2组件守卫,回调函数
+      beforeRouteEnter (to, from, next) {
+          next((component)=>{
+              if(!component.$store.state.user.userInfo.token){
+                next()
+            }else{
+                next('/')
+            }
+          })
+      },
   }
 </script>
 

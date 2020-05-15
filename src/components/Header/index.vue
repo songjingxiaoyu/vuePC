@@ -7,7 +7,7 @@
                         <p>尚品汇欢迎您！</p>
                         <p v-if="userInfo.name">
                             <span>{{userInfo.nickName}}</span>&nbsp;&nbsp;
-                            <a href="javescript:">退出</a>
+                            <a href="javescript:" @click="logout">退出</a>
                         </p>
                         <p v-else>
                             <span>请</span>
@@ -16,7 +16,7 @@
                         </p>
                     </div>
                     <div class="typeList">
-                        <a href="###">我的订单</a>
+                        <router-link to="/center/myorder">我的订单</router-link>
                         <router-link to="/shopcart">我的购物车</router-link>
                         <a href="###">我的尚品汇</a>
                         <a href="###">尚品汇会员</a>
@@ -42,7 +42,7 @@
                         class="input-error input-xxlarge" 
                         v-model="keyword"/>
                         <button class="sui-btn btn-xlarge btn-danger"
-                         @click.prevent="search">搜索</button>
+                         @click.prevent="toSearch">搜索</button>
                         <!-- <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button> -->
                     </form>
                 </div>
@@ -71,73 +71,38 @@ export default {
         })
     },
     methods:{
-      search(){
-        //字符串模式
-        // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`)
-        //对象模式（在开发中用得比较多）
-        // const keyword = this.keyword;
-        // if(keyword === ''){
-        //     this.$router.push('/search')
-        // }else{
-        //     this.$router.push(`/search${keyword}?keyword2=${keyword.toUpperCase()}`)
-        // }
-        
-        //对象写法1
-        /*
-        if(keyword === ''){
+
+        async logout(){
+            try{
+                await this.$store.dispatch('logout')
+                this.$router.replace('/')
+            }catch(error){
+                alert(error.message)
+            }
+        },
+      toSearch(){
+           // 得到当前的请求路径和query参数对象
+        const {path, query} = this.$route
+        if (this.keyword) {
+          // 如果当前在搜索页面, 需要携带params和query参数
+          if (path.indexOf('/search')===0) {
             this.$router.push({
-                name:'search'
-            })
-        }else{
-            this.$router.push({
-                name:'search',
-                params:{keyword:keyword},
-                query:{keyword2:keyword.toUpperCase()}
-            })
+              name: 'search', 
+              params: {keyword: this.keyword},
+              query
+            })  // 可以
+          } else {  // 如果不在, 只需要携带params参数
+            this.$router.push({name: 'search', params: {keyword: this.keyword}})  // 可以
+          }
+        } else {
+          
+          if (path.indexOf('/search')===0) {
+            this.$router.push({name: 'search', query})
+          } else {  
+            this.$router.push({name: 'search'})
+          }
+          
         }
-        */ 
-
-       //对象写法2
-       /*
-       this.$router.push({
-           name:'search',
-           params:{keyword:keyword === '' ? undefined : keyword},
-           query:{keyword2: keyword.toUpperCase()}
-       })
-       */
-
-       //问题：编程式路由跳转到当前路由(参数不变), 会抛出NavigationDuplicated的警告错误
-       //解决方法1：在进行路由跳转时指定成功/失败的回调函数, 也可以catch()处理抛出的错误promise
-
-    //    this.$router.push({
-    //        name:'search',
-    //        params:{keyword:keyword==='' ? undefined : keyword},
-    //        query:{keyword2:keyword.toUpperCase()}
-    //    },() => {});
-
-    //    this.$router.push({
-    //        name:'search',
-    //        params:{keyword:keyword==='' ? undefined : keyword},
-    //        query:{keyword2:keyword.toUpperCase()}
-    //    }).catch(() => {});
-
-       const keyword = this.keyword;
-       const location = {
-           name:'search',
-       }
-       if(keyword){
-           location.params = {keyword}
-       }
-       const {query} = this.$route;
-       location.query = query;
-       //跳转到search
-       //如果当前页面是首页使用push，否则用replace
-    //    if(this.$route.path.indexOf('/search')===0){
-       if(this.$route.name==="search"){
-           this.$router.replace(location);
-       }else{
-           this.$router.push(location);
-       }
        
       }
     },

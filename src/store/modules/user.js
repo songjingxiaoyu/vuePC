@@ -10,9 +10,23 @@ export default {
     mutations:{
         RECEIVE_USER_INFO(state,{userInfo}){
             state.userInfo = userInfo
+        },
+        RESET_USER_INFO(state){
+            state.userInfo = {}
         }
+
     },
     actions:{
+        //退出登录
+        async logout ({commit}){
+            const result = await reqLogout()
+            if(result.code===200){
+                commit('RESET_USER_INFO')
+                removeUserInfo()
+            }else{
+                throw new Error(result.message || '退出登录失败')
+            }
+        },
         //注册异步action
         async register(context,userInfo){
             const result = await reqRegister(userInfo)

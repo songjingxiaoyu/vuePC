@@ -16,9 +16,15 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
     //2 显示请求进度条
     Nprogress.start()
-    //5 userTempId带请求头
+    //5 每次请求带userTempId请求头
     // config.headers.userTempId = store.state.user.userTempId
     config.headers['userTempId'] = store.state.user.userTempId
+    //6 每次请求带token请求头
+    const token = store.state.user.userInfo.token
+    if(token){
+        config.header['token'] = token
+    }
+    
     return config;
 });
 
