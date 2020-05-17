@@ -1,5 +1,6 @@
-import Home from '@/pages/Home';
-import Search from '@/pages/Search';
+
+// import Home from '@/pages/Home';
+// import Search from '@/pages/Search';
 import Detail from '@/pages/Detail';
 import AddCartSuccess from '@/pages/AddCartSuccess';
 import ShopCart from '@/pages/ShopCart';
@@ -19,16 +20,22 @@ import Login from '@/pages/Login';
 
 import store from '@/store'
 import router from '@/router'
+
+
 export default [
     {
         path:'/',
-        component:Home,
+        // component:Home,
+        //路由懒加载
+        //动态引入，单独打包，第一次访问对应路由才会执行
+        component:() => import('@/pages/Home'),
     },
     {
         name:'search',
         path:'/search/:keyword?',
-        component:Search,
-        // props: route => ({keyword3:route.params.keyword,keyword4:route.query.keyword2})
+        // component:Search,
+        component:() => import('@/pages/Search'),
+        props: route => ({keyword3:route.params.keyword,keyword4:route.query.keyword2})
     },
     {
         name:'detail',
@@ -36,7 +43,7 @@ export default [
         component:Detail,
     },
     {
-        path:'/addCartSuccess',
+        path:'/addcartsuccess',
         component:AddCartSuccess,
         beforeEnter (to, from, next) {
             // const route = router.currentRoute
@@ -70,6 +77,8 @@ export default [
     {
         path:'/pay',
         component:Pay,
+        //将query映射成props传递给路由组件
+        props:route => ({orderId:route.query.orderId}),
         beforeEnter(to,from,next){
             if(from.path==='/trade'){
                 next()

@@ -17,7 +17,7 @@
             <form action="##" @submit.prevent="login">
               <div class="input-text clearFix">
                 <span></span>
-                <input type="text" placeholder="邮箱/用户名/手机号" v-model="mobile">
+                <input type="text" placeholder="手机号" v-model="mobile">
               </div>
               <div class="input-text clearFix">
                 <span class="pwd"></span>
@@ -72,7 +72,7 @@ import store from '@/store'
     data() {
       return {
         mobile:'',
-        possword:'',
+        password:'',
       }
     },
     methods: {

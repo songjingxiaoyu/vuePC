@@ -42,7 +42,7 @@
                         class="input-error input-xxlarge" 
                         v-model="keyword"/>
                         <button class="sui-btn btn-xlarge btn-danger"
-                         @click.prevent="toSearch">搜索</button>
+                         @click.prevent="search">搜索</button>
                         <!-- <button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button> -->
                     </form>
                 </div>
@@ -80,28 +80,29 @@ export default {
                 alert(error.message)
             }
         },
-      toSearch(){
+      search(){
            // 得到当前的请求路径和query参数对象
-        const {path, query} = this.$route
-        if (this.keyword) {
-          // 如果当前在搜索页面, 需要携带params和query参数
-          if (path.indexOf('/search')===0) {
-            this.$router.push({
-              name: 'search', 
-              params: {keyword: this.keyword},
-              query
-            })  // 可以
-          } else {  // 如果不在, 只需要携带params参数
-            this.$router.push({name: 'search', params: {keyword: this.keyword}})  // 可以
-          }
+        const keyword = this.keyword
+
+        const location = { // push是重写后的方法
+          name: 'search', 
+        }
+        // 如果keyword有值, 指定params
+        if (keyword) {
+          location.params = {keyword}
+        }
+
+        // 同时还要携带当前原本的query
+        const {query} = this.$route
+        location.query = query
+
+        // 跳转到Search
+        // 如果当前在Search, 使用replace(), 否则使用push
+        // if (this.$route.name==="search") {
+        if (this.$route.path.indexOf('/search') === 0) {
+          this.$router.replace(location)
         } else {
-          
-          if (path.indexOf('/search')===0) {
-            this.$router.push({name: 'search', query})
-          } else {  
-            this.$router.push({name: 'search'})
-          }
-          
+          this.$router.push(location)
         }
        
       }

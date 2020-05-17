@@ -6,7 +6,7 @@
     <!-- 主要内容区域 -->
     <section class="con">
       <!-- 导航路径区域 -->
-      <!-- <div class="conPoin" v-if="detailInfo.categoryView">
+      <!-- <div class="conPoin" v-show="detailInfo.categoryView">
         <span>{{detailInfo.categoryView.category1Name}}</span>
         <span>{{detailInfo.categoryView.category2Name}}</span>
         <span>{{detailInfo.categoryView.category3Name}}</span>
@@ -73,7 +73,7 @@
               <dl v-for="(attr) in spuSaleAttrList" :key="attr.id">
                 <dt class="title">{{attr.saleAttrName}}</dt>
                 <dd v-for="(value) in attr.spuSaleAttrValueList"
-                :key="value.id" :class="{active:value.isChecked==='1'}"
+                :key="value.id" :class="{active: value.isChecked==='1'}"
                 @click="selectValue(value, attr.spuSaleAttrValueList)"
                 >{{value.saleAttrValueName}}</dd>
               </dl>
@@ -336,13 +336,13 @@
 </template>
 
 <script>
-  import {mapState, mapGetters} from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import ImageList from './ImageList/ImageList'
   import Zoom from './Zoom/Zoom'
 
   export default {
     name: 'Detail',
-    data() {
+    data () {
       return {
         //当前要交给zoom显示的图片下标
         currentIndex:0,
@@ -352,16 +352,16 @@
     },
     computed: {
       ...mapState({
-        detailInfo:state=>state.detail.detailInfo
-      }),
+        detailInfo: state => state.detail.detailInfo
+      }), 
       ...mapGetters(['categoryView','skuInfo','skuImageList','spuSaleAttrList']),
     },
-    mounted() {
-      this.$store.dispatch('getDetailInfo',this.$route.params.skuId)
+    mounted () {
+      this.$store.dispatch('getDetailInfo', this.$route.params.skuId)
     },
     methods: {
       //
-      addToCart(){
+      async addToCart () {
         const skuId = this.$route.params.skuId
         const skuNum = this.skuNum
         //方式1
@@ -377,12 +377,12 @@
         //方式3
         try {
           // await this.$store.dispatch('addToCart3', {skuId, skuNum})
-          this.$store.dispatch('addToCart3', {skuId, skuNum})
+          await this.$store.dispatch('addToCart3', {skuId, skuNum})
           //向sessionStorage保存skuInfo
-          window.sessionStorage.setItem('SKU_IN_FO', JSON.stringify(this.skuInfo))
+          window.sessionStorage.setItem('SKU_INFO_KEY', JSON.stringify(this.skuInfo))
           this.$router.push({
-            path:'/addcartsuccess',
-            query:{skuNum}
+            path: '/addcartsuccess',
+            query: {skuNum}
           })
         } catch (error) {
           alert(error.message)

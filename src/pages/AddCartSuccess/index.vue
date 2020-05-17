@@ -9,14 +9,14 @@
             <img :src="skuInfo.skuDefaultImg">
           </div>
           <div class="right-info">
-            <p class="title">{{skuInfo.skuName}} </p>
+            <p class="title">{{skuInfo.skuName}}</p>
             <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：{{$route.query.skuNum}}</p>
           </div>
         </div>
         <div class="right-gocart">
-          <router-link :to="`/detail/${skuInfo.id}`" class="sui-btn btn-xlarge">查看商品详情</router-link>
-          <!-- <router-link :to="{name:'detail',params:{skuId:skuInfo}}" class="sui-btn btn-xlarge">查看商品详情</router-link> -->
-          <a href="javascript:" @click="$router.push('/shopcart')" >去购物车结算 > </a>
+          <router-link class="sui-btn btn-xlarge" :to="`/detail/${skuInfo.id}`">查看商品详情</router-link>
+          <!-- <router-link class="sui-btn btn-xlarge" :to="{name: 'detail', params: {skuId: skuInfo.id}}">查看商品详情</router-link> -->
+          <a href="javascript:" @click="$router.push('/shopcart')">去购物车结算 > </a>
         </div>
       </div>
     </div>
@@ -27,14 +27,14 @@
 import router from '@/router'
   export default {
     name: 'AddCartSuccess',
-    data() {
+    data () {
       return {
-        skuInfo:{}
+        skuInfo: {}
       }
     },
     //做一些同步操作后，更新数据
-    beforeMount() {
-     this.skuInfo = JSON.parse( window.sessionStorage.getItem('SKU_INFO_KEY'))
+    beforeMount () {
+      this.skuInfo = JSON.parse(window.sessionStorage.getItem('SKU_INFO_KEY'))
     },
     //只有携带的skuNum以及sessionStorage中有skuInfo数据, 才能查看添加购物车成功的界面
     // beforeRouteEnter (to, from, next) {

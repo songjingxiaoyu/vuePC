@@ -24,7 +24,7 @@ export default {
             }
         },
         //改变购物车项的勾选状态的异步
-        async checkCartItem({commit},{skuId,isChecked}){
+        async checkCartItem({},{skuId,isChecked}){
             const result = await reqCheckCartItem(skuId,isChecked)
             if(result.code!==200){
                 throw new Error(result.message || '勾选状态操作成功')
@@ -32,7 +32,7 @@ export default {
         },
         //对所有购物项实现全选/全不选
         // async checkAllCartItems(context,checked){
-        async checkAllCartItems({state,commit,dispatch,getters},checked){
+        async checkAllCartItems({state, commit, dispatch, getters}, checked) {
             const isChecked = checked ? 1 : 0
             const promises = []
             state.cartList.forEach(item => {
@@ -42,24 +42,7 @@ export default {
             })
             return Promise.all(promises)
         },
-        //删除指定一个商品
-        async deleteCartItem(context,skuId){
-            const result = await reqDeleteCartItem(skuId)
-            if(result.code!==200){
-                throw new Error('删除商品失败')
-            }
-        },
-        //删除所有选中的商品
-        async deleteCheckedCartItems({state,dispatch}){
-            const promises = state.cartList.reduce((pre,item) => {
-                if(item.isChecked===1){
-                    pre.push(dispatch('deleteCartItem',item.skuId))
-                }
-                return pre
-            },[])
-            return Promise.all(promises)
-        },
-       
+        
 
         //
         async addToCart({commit}, {skuId,skuNum,callback}){
@@ -92,7 +75,25 @@ export default {
             if(result.code!==200){
                 throw new Error ('添加购物车失败')
             }
-        }
+        },
+        //删除指定一个商品
+        async deleteCartItem(context,skuId){
+            const result = await reqDeleteCartItem(skuId)
+            if(result.code!==200){
+                throw new Error('删除商品失败')
+            }
+        },
+        //删除所有选中的商品
+        async deleteCheckedCartItems({state,dispatch}){
+            const promises = state.cartList.reduce((pre,item) => {
+                if(item.isChecked===1){
+                    pre.push(dispatch('deleteCartItem',item.skuId))
+                }
+                return pre
+            },[])
+            return Promise.all(promises)
+        },
+       
     },
     getters:{
         //已选中的商品总数量

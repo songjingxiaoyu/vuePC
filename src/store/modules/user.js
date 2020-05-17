@@ -1,6 +1,6 @@
 //管理用户数据
 
-import {getUserTempId,saveUserInfo,getUserInfo} from '@/utils'
+import {getUserTempId,saveUserInfo,getUserInfo,removeUserInfo} from '@/utils'
 import { reqRegister,reqLogin,reqLogout } from '@/api'
 export default {
     state:{

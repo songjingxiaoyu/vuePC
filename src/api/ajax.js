@@ -22,7 +22,7 @@ instance.interceptors.request.use(config => {
     //6 每次请求带token请求头
     const token = store.state.user.userInfo.token
     if(token){
-        config.header['token'] = token
+        config.headers['token'] = token
     }
     
     return config;

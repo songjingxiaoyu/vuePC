@@ -26,18 +26,16 @@
             <span class="price">{{item.cartPrice}}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins" @click="changeItemNum(item,-1)">-</a>
-            <input autocomplete="off" type="text"  class="itxt" 
-            :value="item.skuNum"
-            @change="changeItemNum(item, $event.target.value*1 - item.skuNum)"
-            >
-            <a href="javascript:void(0)" class="plus" @click="changeItemNum(item,1)">+</a>
+            <a href="javascript:void(0)" class="mins" @click="changeItemNum(item, -1)">-</a>
+            <input autocomplete="off" type="text" class="itxt" :value="item.skuNum"
+            @change="changeItemNum(item, $event.target.value*1 - item.skuNum, $event)">
+            <a href="javascript:void(0)" class="plus" @click="changeItemNum(item, 1)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{item.cartPrice * item.skuNum}}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet" @click="deleteCartItem(item)">删除</a>
+            <a href="javascript:" class="sindelet" @click="deleteCartItem(item)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -46,12 +44,11 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox"
-        v-model="isAllchecked">
+        <input class="chooseAll" type="checkbox" v-model="isAllChecked">
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none" @click="deleteCheckedCartItems">删除选中的商品</a>
+        <a href="javascript:" @click="deleteCheckedCartItems">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -63,7 +60,7 @@
           <i class="summoney">{{totalPrice}}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" @click="$router.push('/trade')">结算</a>
+          <a class="sum-btn" @click="$router.push('/trade')">结算</a>
         </div>
       </div>
     </div>
@@ -71,7 +68,7 @@
 </template>
 
 <script>
-import {mapState,mapGetters} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
   export default {
     name: 'ShopCart',
     computed: {
@@ -84,7 +81,7 @@ import {mapState,mapGetters} from 'vuex'
         return this.$store.state.shopCart.cartList
       },
       //全选/全不选
-      isAllchecked:{
+      isAllChecked:{
         //根据cartList来计算
         get(){
           // return this.cartList.filter(item=>item.isChecked===1)===this.cartList.length
@@ -92,12 +89,12 @@ import {mapState,mapGetters} from 'vuex'
           // return this.cartList.find(item=>item.isChecked!==1)===undefined
           // return !this.cartList.find(item=>item.isChecked!==1)
           // return !this.cartList.some(item=>item.isChecked===0)
-          return this.cartList.every(item=>item.isChecked===1)
+          return this.cartList.every(item=>item.isChecked===1) && this.cartList.length>0
         },
         //监视当前勾选状态的改变
         async set(value){
           try{
-            const result = await this.$store.dispatch('checkAllCartItems',value)
+            const result = await this.$store.dispatch('checkAllCartItems', value)
             this.$store.dispatch('getCartList')
           }catch(error){
             alert(error.message)
@@ -105,28 +102,33 @@ import {mapState,mapGetters} from 'vuex'
         }
       }
     },
-    mounted() {
+    mounted () {
       this.$store.dispatch('getCartList')
     },
     methods: {
       //改变购物项中商品的数量
-      async changeItemNum(item,numChange){
-        try{
-          if(item.skuNum + numChange < 1) return
-          await this.$store.dispatch('addToCart3',{skuId:item.skuId,skuNum:numChange})
+      async changeItemNum (item, numChange, event) {
+        if (item.skuNum + numChange>0) {
+        try {
+          await this.$store.dispatch('addToCart3', {skuId: item.skuId, skuNum: numChange})
           this.$store.dispatch('getCartList')
-        }catch(error){
+        } catch (error) {
           alert(error.message)
+        }
+        }else{
+          if (event) {
+            event.target.value = item.skuNum
+          }
         }
       },
       //改变指定购物项的勾选状态
-      async checkCartItem(item){
+      async checkCartItem (item) {
         const skuId = item.skuId
         const isChecked = item.isChecked===1 ? 0 : 1
         try{
-          await this.$store.dispatch('checkCartItem',{skuId,isChecked})
+          await this.$store.dispatch('checkCartItem', {skuId, isChecked})
           this.$store.dispatch('getCartList')
-        }catch(error){
+        } catch (error) {
           alert(error.message)
         }
       },
@@ -152,15 +154,6 @@ import {mapState,mapGetters} from 'vuex'
          }
        }
       }
-    },
-      beforeRouteEnter (to, from, next) { 
-        next((component) => {
-          if (!component.$store.state.user.userInfo.token) {  
-            next()
-          } else {
-            next('/')
-          }
-        })
     },
   }
 </script>

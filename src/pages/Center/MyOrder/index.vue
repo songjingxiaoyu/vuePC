@@ -48,7 +48,7 @@
 
                         </ul>
                       </td>
-                      <td  width="8%" class="center">
+                      <td width="8%" class="center">
                         <a href="#" class="btn">{{order.orderStatus==='PAID' ? '已支付' : '未支付'}} </a>
                       </td>
                       <td  width="13%" class="center">
@@ -72,8 +72,20 @@
             :showPageNo="5"
             @currentChange="getMyOrders"
               >
-
             </Pagination>
+            
+            <!-- <el-pagination
+            backgroung
+            prev-text="上一页"
+            next-text="下一页"
+            layout="prev,pager,next,->,total"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="total"
+            :pager-count="7"
+            @current-change="getMyOrders"
+            >
+            </el-pagination> -->
           </div>
 </template>
 

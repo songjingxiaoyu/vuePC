@@ -8,8 +8,8 @@
       </h3>
 
 
-      <vaildationProvider ref="from">
-        <from>
+      <ValidationObserver ref="from">
+        <form>
 
           <div class="content">
             <label>手机号:</label>
@@ -67,8 +67,8 @@
             <button @click.prevent="register">完成注册</button>
           </div>
           
-        </from>
-      </vaildationProvider>
+        </form>
+      </ValidationObserver>
     </div>
 
     <!-- 底部 -->

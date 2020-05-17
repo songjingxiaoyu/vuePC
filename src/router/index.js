@@ -1,6 +1,6 @@
 
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import routes from './routes'
 import store from '@/store'
 
@@ -12,7 +12,7 @@ const originPush = VueRouter.prototype.push
 const originReplace = VueRouter.prototype.replace
 //重新制定原型上的push方法
 VueRouter.prototype.push = function (location, onComplete, onAbort){
-    console.log('push()',location, onComplete, onAbort);
+    console.log('push()',location, onComplete, onAbort)
     //this是路由器对象 $router
     //如果调用push,传递了成功或者失败的回调函数
     if(onComplete || onAbort){
@@ -58,7 +58,7 @@ const router =  new VueRouter({
 // })
 
 //所有需要登录检查的路由路径
-const checkPaths = ['/trade','/pay','/center']
+const checkPaths = ['/trade', '/pay', '/center']
 
 //只有登录了，才能查看交易/支付/个人中心界面
 router.beforeEach((to,from,next)=>{
@@ -68,10 +68,10 @@ router.beforeEach((to,from,next)=>{
     if(isCheckPath){
         if(store.state.user.userInfo.name){
             next()
-        }else{
-            next('/login')
+        } else{
+            next('/login?redirect=' + targetPath)
         }
-    }else{
+    } else {
         next()
     }
 
