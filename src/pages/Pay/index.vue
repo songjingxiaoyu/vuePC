@@ -107,7 +107,7 @@
         .then(url => {
           console.log(url)
           //显示支付二维码界面
-          this.$alert(`<img src="">`, 'HTML 片段', {
+          this.$alert(`<img src="${url}">`, ' 请使用微信扫码支付', {
             dangerouslyUseHTMLString: true,
             center:true, //居中显示
             showClose:false, 

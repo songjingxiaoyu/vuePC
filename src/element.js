@@ -10,11 +10,13 @@ import Vue from 'vue';
 import {
     Pagination,
     MessageBox,
-    Message
+    Message,
+    Button
 } from 'element-ui'
 //注册全局组件
 //标签组件  <el-pagination></el-pagination>
 Vue.component(Pagination.name, Pagination);
+Vue.component(Button.name, Button);
 //函数/对象组件
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;

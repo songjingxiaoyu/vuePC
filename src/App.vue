@@ -11,7 +11,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 // import {reqBaseCategoryList,reqLogin} from '@/api';
-import {reqBanners} from '@/api';
+// import {reqBanners} from '@/api';
 import {reqFloors} from '@/api';
 export default {
   name: 'App',

@@ -1,3 +1,5 @@
+
+
 import Vue from 'vue';
 import  'swiper/css/swiper.min.css'
 // import App from './App.vue';
@@ -10,6 +12,15 @@ import Pagination from '@/components/Pagination'
 import './mock/mockServer';
 import './validate'
 import * as API from '@/api'
+// import './elements'
+import VueLazyLoad from 'vue-lazyload'
+import loading  from '@/assets/images/loading.gif'
+
+//配置vue插件
+Vue.use(VueLazyLoad,{
+  loading,
+})
+
 
 
 Vue.config.productionTip = false//去掉生产环境的提示
