@@ -3,11 +3,9 @@
     <h3 class="title">填写并核对订单信息</h3>
     <div class="content">
       <h5 class="receive">收件人信息</h5>
-      <div class="address clearFix" 
-      v-for="address in tradeInfo.userAddressList" 
-      :key="address.id"  @click="selectedAddr=address"
-      >
-        <span class="username" :class="{selected:address===selectedAddr}">{{address.consignee}}</span>
+      <div class="address clearFix" v-for="address in tradeInfo.userAddressList" 
+      :key="address.id" @click="selectedAddr=address">
+        <span class="username" :class="{selected: address===selectedAddr}">{{address.consignee}}</span>
         <p>
           <span class="s1">{{address.userAddress}}</span>
           <span class="s2">{{address.phoneNum}}</span>
@@ -34,11 +32,10 @@
         <h5>商品清单</h5>
         <ul class="list clearFix" v-for="item in tradeInfo.detailArrayList" :key="item.skuId">
           <li>
-            <img :src="item.imgUrl" alt="" style="width:100px, height:100px">
+            <img :src="item.imgUrl" alt="" style="width:100px;height:100px;">
           </li>
           <li>
-            <p>
-              {{item.skuName}}</p>
+            <p>{{item.skuName}}</p>
             <h4>7天无理由退货</h4>
           </li>
           <li>
@@ -50,7 +47,7 @@
       </div>
       <div class="bbs">
         <h5>买家留言：</h5>
-        <textarea placeholder="建议留言前先与商家沟通确认" class="remarks-cont"></textarea>
+        <textarea placeholder="建议留言前先与商家沟通确认" class="remarks-cont" v-model="orderComment"></textarea>
 
       </div>
       <div class="line"></div>
@@ -76,7 +73,7 @@
         </li>
       </ul>
     </div>
-    <div class="trade">
+    <div class="trade" >
       <div class="price">应付金额:　<span>¥{{tradeInfo.totalAmount}}</span></div>
       <div class="receiveInfo">
         寄送至:
@@ -86,7 +83,7 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <a href="javascript:"  class="subBtn" @click="submitOrder">提交订单</a>
+      <a href="javascript:" class="subBtn" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
@@ -95,18 +92,17 @@
 import {mapState} from 'vuex'
   export default {
     name: 'Trade',
-    data() {
+    data () {
       return {
         //选中的地址信息对象
-        selectedAddr:{},
-        orderComment:'请尽快发货',
+        selectedAddr: {},
+        orderComment: '请尽快发货',
       }
     },
-
     computed: {
       ...mapState({
-        tradeInfo:state => state.order.tradeInfo
-      }),
+        tradeInfo: state => state.order.tradeInfo
+      })
     },
     watch: {
       //第一种写法
@@ -115,28 +111,28 @@ import {mapState} from 'vuex'
       //    this.selectedAddr = selectedAddr
       // },
       // //第二种写法
-      'tradeInfo.userAddressList'(value){
+      'tradeInfo.userAddressList' (value){
          const selectedAddr = value.find(addr => addr.isDefault==='1')
-         this.selectedAddr = selectedAddr
+         console.log(selectedAddr)
+         this.selectedAddr = selectedAddr || {}
       }
     },
-    mounted() {
+    mounted () {
       this.$store.dispatch('getTradeInfo')
     },
     methods: {
       async submitOrder(){
-        const { tradeNO, detailArrayList} = this.tradeInfo
-        const { userAddress, consignee, phoneNum} = this.selectedAddr
+        const { tradeNo, detailArrayList } = this.tradeInfo
+        const {userAddress, consignee, phoneNum} = this.selectedAddr
         const orderInfo = {
           consignee,
-          consigneeTel:phoneNum,
-          deliveryAddress:userAddress,
-          paymentWay:'ONLINE',
-          orderComment:this.orderComment,
-          orderDetailList:detailArrayList,
-                       
+          consigneeTel: phoneNum,
+          deliveryAddress: userAddress,
+          paymentWay: 'ONLINE', // 固定为在线支付
+          orderComment: this.orderComment, // 留言内容
+          orderDetailList: detailArrayList // 订单中的商品列表                       
         }
-        const result = await this.$API.reqSubmitOrder(tradeNO,orderInfo)
+        const result = await this.$API.reqSubmitOrder(tradeNo, orderInfo)
         if(result.code===200){
           const orderId = result.data
           // this.$router.push('/pay?orderId=' + orderId)
